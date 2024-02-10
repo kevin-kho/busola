@@ -1,12 +1,12 @@
-import React, { Suspense, useEffect } from 'react';
-import pluralize from 'pluralize';
+import { FlexibleColumnLayout } from '@ui5/webcomponents-react';
 import i18next from 'i18next';
+import pluralize from 'pluralize';
+import React, { Suspense, useEffect } from 'react';
 import { Route, useParams, useSearchParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { FlexibleColumnLayout } from '@ui5/webcomponents-react';
 
-import { columnLayoutState } from 'state/columnLayoutAtom';
 import { useFeature } from 'hooks/useFeature';
+import { columnLayoutState } from 'state/columnLayoutAtom';
 
 import { selectDetails, selectList } from 'custom-ui/selector';
 import { Spinner } from 'shared/components/Spinner/Spinner';
@@ -80,10 +80,6 @@ const ColumnWrapper = ({ defaultColumn = 'list', resourceType }) => {
   );
 };
 export const createExtensibilityRoutes = (cr, language) => {
-  console.log('ExtensibilityRoutes.js');
-  console.log(cr);
-  console.log(language);
-
   const urlPath =
     cr?.general?.urlPath ||
     pluralize(cr?.general?.resource?.kind?.toLowerCase() || '');
