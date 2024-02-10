@@ -8,6 +8,7 @@ import { FlexibleColumnLayout } from '@ui5/webcomponents-react';
 import { columnLayoutState } from 'state/columnLayoutAtom';
 import { useFeature } from 'hooks/useFeature';
 
+import { selectDetails, selectList } from 'custom-ui/selector';
 import { Spinner } from 'shared/components/Spinner/Spinner';
 
 const List = React.lazy(() => import('../Extensibility/ExtensibilityList'));
@@ -79,6 +80,10 @@ const ColumnWrapper = ({ defaultColumn = 'list', resourceType }) => {
   );
 };
 export const createExtensibilityRoutes = (cr, language) => {
+  console.log('ExtensibilityRoutes.js');
+  console.log(cr);
+  console.log(language);
+
   const urlPath =
     cr?.general?.urlPath ||
     pluralize(cr?.general?.resource?.kind?.toLowerCase() || '');
@@ -90,24 +95,40 @@ export const createExtensibilityRoutes = (cr, language) => {
     cr?.translations?.[language] || {},
   );
 
+  // Need to load array into config instead of hardcode here
+  const hasCustomUI = ['apigateways', 'serviceentries'].includes(
+    cr.general.urlPath,
+  );
+
   return (
     <React.Fragment key={urlPath}>
+      {/* List View */}
       <Route
         path={urlPath}
         exact
         element={
           <Suspense fallback={<Spinner />}>
-            <ColumnWrapper resourceType={urlPath} />
+            {hasCustomUI ? (
+              selectList(cr.general.urlPath)
+            ) : (
+              <ColumnWrapper resourceType={urlPath} />
+            )}
           </Suspense>
         }
       />
+
+      {/* Detail View */}
       {cr.details && (
         <Route
           path={`${urlPath}/:resourceName`}
           exact
           element={
             <Suspense fallback={<Spinner />}>
-              <ColumnWrapper defaultColumn="details" resourceType={urlPath} />
+              {hasCustomUI ? (
+                selectDetails(cr.general.urlPath)
+              ) : (
+                <ColumnWrapper defaultColumn="details" resourceType={urlPath} />
+              )}
             </Suspense>
           }
         />
