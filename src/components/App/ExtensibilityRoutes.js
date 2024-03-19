@@ -92,9 +92,14 @@ export const createExtensibilityRoutes = (cr, language) => {
   );
 
   // Need to load array into config instead of hardcode here
-  const hasCustomUI = ['apigateways', 'serviceentries'].includes(
-    cr.general.urlPath,
-  );
+
+  const hasCustomDetailsUI =
+    // []
+    ['apigateways', 'serviceentries'].includes(cr.general.urlPath);
+
+  const hasCustomListUI = []
+    // ['apigateways', 'serviceentries']
+    .includes(cr.general.urlPath);
 
   return (
     <React.Fragment key={urlPath}>
@@ -104,7 +109,7 @@ export const createExtensibilityRoutes = (cr, language) => {
         exact
         element={
           <Suspense fallback={<Spinner />}>
-            {hasCustomUI ? (
+            {hasCustomListUI ? (
               selectList(cr.general.urlPath)
             ) : (
               <ColumnWrapper resourceType={urlPath} />
@@ -120,7 +125,7 @@ export const createExtensibilityRoutes = (cr, language) => {
           exact
           element={
             <Suspense fallback={<Spinner />}>
-              {hasCustomUI ? (
+              {hasCustomDetailsUI ? (
                 selectDetails(cr.general.urlPath)
               ) : (
                 <ColumnWrapper defaultColumn="details" resourceType={urlPath} />
